@@ -28,10 +28,10 @@ export interface SelectBoxProps {
   inputPlaceholder?: string
   hideInputFilter?: boolean
   width?: number | string
-  isMulti: boolean
+  isMulti?: boolean
   options: any | ItemSelected[]
   value?: ItemSelected
-  selectedValues: any | ItemSelected[]
+  selectedValues?: any | ItemSelected[]
   arrowIconColor?: string
   searchIconColor?: string
   toggleIconColor?: string
@@ -41,4 +41,8 @@ export interface SelectBoxProps {
   onChange?(item?: any): void
   onMultiSelect?(item?: any): void
   onTapClose?(item?: any): void
+  removeItemsSelected?: boolean
+  editStatus?(item: any): void
+  noEditable?: boolean
+  bottomBarColor?: string
 }

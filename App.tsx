@@ -1,106 +1,104 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
+/* eslint-disable react-native/no-inline-styles */
+import React, { useState } from 'react'
+import { Text, View } from 'react-native'
+import { xorBy } from 'lodash'
+import { SelectBox } from './lib'
+import { ItemSelected } from './lib/src/constants/types'
 
-import React from 'react'
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native'
+// Options data must contain 'item' & 'id' keys
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions
-} from 'react-native/Libraries/NewAppScreen'
+const K_OPTIONS: ItemSelected[] = [
+  {
+    item: 'Juventus',
+    id: 'JUVE'
+  },
+  {
+    item: 'Real Madrid',
+    id: 'RM'
+  },
+  {
+    item: 'Barcelona',
+    id: 'BR'
+  },
+  {
+    item: 'PSG',
+    id: 'PSG'
+  },
+  {
+    item: 'FC Bayern Munich',
+    id: 'FBM'
+  },
+  {
+    item: 'Manchester United FC',
+    id: 'MUN'
+  },
+  {
+    item: 'Manchester City FC',
+    id: 'MCI'
+  },
+  {
+    item: 'Everton FC',
+    id: 'EVE'
+  },
+  {
+    item: 'Tottenham Hotspur FC',
+    id: 'TOT'
+  },
+  {
+    item: 'Chelsea FC',
+    id: 'CHE'
+  },
+  {
+    item: 'Liverpool FC',
+    id: 'LIV'
+  },
+  {
+    item: 'Arsenal FC',
+    id: 'ARS'
+  },
 
-const Section: React.FC<{
-  title: string
-}> = ({ children, title }) => {
-  const isDarkMode = useColorScheme() === 'dark'
+  {
+    item: 'Leicester City FC',
+    id: 'LEI'
+  }
+]
+
+function App() {
+  const [selectedTeam, setSelectedTeam] = useState<ItemSelected>({})
+  const [selectedTeams, setSelectedTeams] = useState<ItemSelected[]>([])
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black
-          }
-        ]}
-      >
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark
-          }
-        ]}
-      >
-        {children}
-      </Text>
+    <View style={{ margin: 30 }}>
+      <View style={{ width: '100%', alignItems: 'center' }}>
+        <Text style={{ fontSize: 30, paddingBottom: 20 }}>Demos</Text>
+      </View>
+      <Text style={{ fontSize: 20, paddingBottom: 10 }}>Select Demo</Text>
+      <SelectBox
+        label='Select single'
+        options={K_OPTIONS}
+        value={selectedTeam}
+        onChange={onChange()}
+        hideInputFilter={false}
+      />
+      <View style={{ height: 40 }} />
+      <Text style={{ fontSize: 20, paddingBottom: 10 }}>MultiSelect Demo</Text>
+      <SelectBox
+        label='Select multiple'
+        options={K_OPTIONS}
+        selectedValues={selectedTeams}
+        onMultiSelect={onMultiChange()}
+        onTapClose={onMultiChange()}
+        isMulti
+      />
     </View>
   )
-}
 
-const App = () => {
-  const isDarkMode = useColorScheme() === 'dark'
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
+  function onMultiChange() {
+    return (item: ItemSelected) => setSelectedTeams(xorBy(selectedTeams, [item], 'id'))
   }
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView contentInsetAdjustmentBehavior='automatic' style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white
-          }}
-        >
-          <Section title='Step One'>
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this screen and then come back to see your
-            edits.
-          </Section>
-          <Section title='See Your Changes'>
-            <ReloadInstructions />
-          </Section>
-          <Section title='Debug'>
-            <DebugInstructions />
-          </Section>
-          <Section title='Learn More'>Read the docs to discover what to do next:</Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  )
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600'
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400'
-  },
-  highlight: {
-    fontWeight: '700'
+  function onChange() {
+    return (val: ItemSelected) => setSelectedTeam(val)
   }
-})
+}
 
 export default App

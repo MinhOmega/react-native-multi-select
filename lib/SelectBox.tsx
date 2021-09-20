@@ -31,10 +31,13 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   multiListEmptyLabelStyle,
   listEmptyLabelStyle,
   selectedItemStyle,
+  removeItemsSelected,
+  editStatus,
   listEmptyText = 'No results found',
   ...props
 }) => {
   const {
+    noEditable,
     selectIcon,
     label,
     inputPlaceholder = 'Search',
@@ -47,6 +50,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
     arrowIconColor = colors.secondary,
     searchIconColor = colors.secondary,
     toggleIconColor = colors.secondary,
+    bottomBarColor = colors.white,
     searchInputProps,
     multiSelectInputFieldProps,
     listOptionProps = {},
@@ -108,9 +112,11 @@ const SelectBox: React.FC<SelectBoxProps> = ({
     return (
       <View style={[styles.kMultiOptionContainerStyle, multiOptionContainerStyle]}>
         <Text style={[styles.kMultiOptionsLabelStyle, multiOptionsLabelStyle]}>{label?.item}</Text>
-        <TouchableOpacity style={styles.groupItem} hitSlop={hitSlop} onPress={onPressItem()}>
-          <Icon name='closeCircle' fill='#fff' width={21} height={21} />
-        </TouchableOpacity>
+        {removeItemsSelected ? (
+          <TouchableOpacity hitSlop={hitSlop} onPress={onPressItem()}>
+            <Icon name='closeCircle' fill='#fff' width={21} height={21} />
+          </TouchableOpacity>
+        ) : null}
       </View>
     )
   }
@@ -121,6 +127,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   )
 
   function onPressShowOptions() {
+    editStatus ? editStatus(showOptions) : null
     return () => setShowOptions(!showOptions)
   }
   function multiListEmptyComponent() {
@@ -174,7 +181,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
         }}
       >
         <Text style={[styles.kLabelStyle, labelStyle]}>{label}</Text>
-        <View style={[styles.kContainerStyle, containerStyle]}>
+        <View style={[styles.kContainerStyle, containerStyle, { borderColor: bottomBarColor }]}>
           <View style={styles.kContainer}>
             {isMulti ? (
               <FlatList
@@ -200,9 +207,11 @@ const SelectBox: React.FC<SelectBoxProps> = ({
               </TouchableOpacity>
             )}
           </View>
-          <TouchableOpacity onPress={onPressShowOptions()} hitSlop={hitSlop}>
-            {selectIcon ? selectIcon : <Icon name={showOptions ? 'upArrow' : 'downArrow'} fill={arrowIconColor} />}
-          </TouchableOpacity>
+          {noEditable ? null : (
+            <TouchableOpacity onPress={onPressShowOptions()} hitSlop={hitSlop}>
+              {selectIcon ? selectIcon : <Icon name={showOptions ? 'upArrow' : 'downArrow'} fill={arrowIconColor} />}
+            </TouchableOpacity>
+          )}
         </View>
         {/* Options wrapper */}
         {showOptions && (
@@ -295,7 +304,9 @@ const styles = StyleSheet.create({
   },
   kMultiOptionsLabelStyle: {
     fontSize: 10,
-    color: colors.white
+    color: colors.white,
+    padding: 4,
+    marginRight: 5
   },
   kMultiListEmptyLabelStyle: {
     fontSize: 17,
