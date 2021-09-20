@@ -46,6 +46,7 @@ export declare type SelectBoxProps = {
   removeItemsSelected?: boolean
   editStatus?(item: any): void
   noEditable?: boolean
+  bottomBarColor?: string
 }
 
 declare const SelectBox: React.FC<SelectBoxProps>
